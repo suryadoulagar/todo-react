@@ -1,23 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Todo from "./Todo";
 import { Button, FormControl, Input, InputLabel } from "@material-ui/core";
 import "./App.css";
+import db from './firebase';
+import firebase from 'firebase';
 
 function App() {
-  const [todos, setTodos] = useState([
-    "work on React",
-    "finish cs50",
-    "order snacks",
-  ]);
-  const [input, setInput] = useState([""]);
-  console.log(input);
+  const [todos, setTodos] = useState([]);
+  const [input, setInput] = useState('');
+  //listens to database and fetches new todos when loaded/refreshed
+  useEffect(() => {
+    //  this code is fired when app.js is loaded
+    db.collection('todos').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
+      setTodos(snapshot.docs.map(doc => doc.data().todo))
+    })
+  }, []);
 
   const addTodo = (event) => {
     //adding todos to the list after clicking the button
     event.preventDefault();
-    console.log("its working");
-
-    setTodos([...todos, input]);
+    //add todos to database
+    db.collection('todos').add({
+      todo : input,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    })
+    //set input field back to blank
     setInput("");
   };
 
