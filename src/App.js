@@ -30,7 +30,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>wish list!</h1>
+      <h1>Your Personal wish Bucket!</h1>
       <form>
         <FormControl>
           <InputLabel>Make A Wish!</InputLabel>
